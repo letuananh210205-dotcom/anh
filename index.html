@@ -1,9 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-    <title>Website cua Tuan Anh</title>
+    <meta charset="UTF-8">
+    <title>Website Dynamic của Tuấn Anh</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background-color: #f4f4f9; }
+        .box { border: 2px dashed #0070f3; padding: 20px; display: inline-block; background: #fff; margin-top: 20px; border-radius: 8px; }
+        #api-data { color: #ff007f; font-weight: bold; }
+    </style>
 </head>
 <body>
-    <h1>Chúc mừng! Website đã deploy thành công lên Cloudflare Pages!</h1>
+    <h1>Hệ Thống Website Full-Stack trên Cloudflare</h1>
+    <p>Giao diện tĩnh Frontend: <span style="color: green; font-weight: bold;">ĐÃ CHẠY</span></p>
+    
+    <div class="box">
+        <h3>Dữ liệu lấy từ Backend (API):</h3>
+        <p id="api-data">Đang tải dữ liệu từ server...</p>
+    </div>
+
+    <script>
+        // Gọi lên endpoint backend /api/hello mà chúng ta vừa tạo ở thư mục functions
+        fetch('/api/hello')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('api-data').innerText = data.message;
+            })
+            .catch(err => {
+                document.getElementById('api-data').innerText = "Lỗi kết nối Backend rồi!";
+                console.error(err);
+            });
+    </script>
 </body>
 </html>
