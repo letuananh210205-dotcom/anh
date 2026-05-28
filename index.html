@@ -2,33 +2,235 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Website Dynamic của Tuấn Anh</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tổng Quan Về Cloudflare - Báo Cáo Công Nghệ</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background-color: #f4f4f9; }
-        .box { border: 2px dashed #0070f3; padding: 20px; display: inline-block; background: #fff; margin-top: 20px; border-radius: 8px; }
-        #api-data { color: #ff007f; font-weight: bold; }
+        :root {
+            --cf-orange: #f38020;
+            --cf-dark: #050505;
+            --text-main: #2c3e50;
+            --text-muted: #627d98;
+            --bg-light: #f4f6f8;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.7;
+            color: var(--text-main);
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 0;
+        }
+
+        .header-banner {
+            background: linear-gradient(135deg, var(--cf-dark) 0%, #1e1e1e 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom: 4px solid var(--cf-orange);
+        }
+
+        .header-banner h1 {
+            margin: 0;
+            font-size: 32px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .header-banner p {
+            margin: 15px 0 0 0;
+            color: var(--text-muted);
+            font-size: 16px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .wrapper {
+            max-width: 1000px;
+            margin: -40px auto 60px auto;
+            padding: 0 20px;
+        }
+
+        .main-card {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+        }
+
+        h2 {
+            color: var(--cf-dark);
+            font-size: 22px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f0f4f8;
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background-color: var(--cf-orange);
+        }
+
+        p {
+            text-align: justify;
+            margin-bottom: 20px;
+            color: #334e68;
+        }
+
+        /* --- CẤU TRÚC TIMELINE (LỊCH SỬ) --- */
+        .timeline {
+            position: relative;
+            margin: 30px 0;
+            padding-left: 30px;
+            border-left: 3px solid #e4e7eb;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -38px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--cf-orange);
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 3px rgba(243, 128, 32, 0.2);
+        }
+
+        .timeline-date {
+            font-weight: bold;
+            color: var(--cf-orange);
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        /* --- HỆ THỐNG METRIC CARDS (THỊ PHẦN) --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--cf-orange);
+            background: #fff;
+            box-shadow: 0 10px 20px rgba(243, 128, 32, 0.05);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--cf-orange);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--cf-dark);
+            margin-bottom: 8px;
+        }
+
+        .stat-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            text-align: justify;
+        }
+
+        /* --- THẺ CẢNH BÁO / ĐẶC BIỆT --- */
+        .alert-box {
+            background-color: #fff5ed;
+            border-left: 4px solid #ff8c3a;
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin-top: 25px;
+        }
+
+        .alert-box strong {
+            color: #c45500;
+            display: block;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
-    <h1>Hệ Thống Website Full-Stack trên Cloudflare</h1>
-    <p>Giao diện tĩnh Frontend: <span style="color: green; font-weight: bold;">ĐÃ CHẠY</span></p>
-    
-    <div class="box">
-        <h3>Dữ liệu lấy từ Backend (API):</h3>
-        <p id="api-data">Đang tải dữ liệu từ server...</p>
+
+    <div class="header-banner">
+        <h1>I. Tổng Quan Về Hãng Cloudflare</h1>
+        <p>Cloudflare là một công ty công nghệ chuyên cung cấp dịch vụ bảo mật và tối ưu hóa hiệu suất cho các trang web và ứng dụng trực tuyến. Nổi bật với khả năng giảm thiểu thời gian tải trang, bảo vệ khỏi các mối đe dọa mạng và tối ưu hóa trải nghiệm người dùng cuối trên toàn cầu.</p>
     </div>
 
-    <script>
-        // Gọi lên endpoint backend /api/hello mà chúng ta vừa tạo ở thư mục functions
-        fetch('/api/hello')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('api-data').innerText = data.message;
-            })
-            .catch(err => {
-                document.getElementById('api-data').innerText = "Lỗi kết nối Backend rồi!";
-                console.error(err);
-            });
-    </script>
+    <div class="wrapper">
+        <div class="main-card">
+            
+            <h2>1. Lịch sử hình thành và phát triển</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">Năm 2009 — Khởi Đầu</div>
+                    <p>Cloudflare được thành lập bởi Matthew Prince, Michelle Zatlyn và Lee Holloway. Ban đầu, công ty tập trung tối ưu hóa hiệu suất, cung cấp dịch vụ chống tấn công từ chối dịch vụ phân tán (DDoS) và cải thiện tốc độ truy cập web thông qua hệ thống phân phối nội dung tối ưu.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">Giai đoạn phát triển & Bùng nổ</div>
+                    <p>Sự ra đời của các dịch vụ CDN và bảo mật giúp Cloudflare nhanh chóng thu hút cộng đồng công nghệ, liên tiếp nâng cấp và bổ sung các giải pháp mới để định hình vị trí mạng lưới lớn nhất toàn cầu, phục vụ hàng triệu khách hàng đa lĩnh vực.</p>
+                </div>
+            </div>
+
+            <h2>2. Thị phần và vị thế công nghệ toàn cầu</h2>
+            <p>Tính đến giữa năm 2026, Cloudflare đã khẳng định vị thế như một "xương sống" công nghệ của Internet toàn cầu với thị phần áp đảo trong cả số lượng website sử dụng lẫn lưu lượng dữ liệu xử lý:</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">15% - 20%</div>
+                    <div class="stat-label">Tổng số Website</div>
+                    <div class="stat-desc">Đang hoạt động trên thế giới tích hợp nền tảng này. Riêng phân khúc top 100k - 1 triệu web lớn nhất, hãng chiếm tới gần 80% thị phần Reverse Proxy và CDN.</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">~20%</div>
+                    <div class="stat-label">Lưu Lượng Web</div>
+                    <div class="stat-desc">Tổng khối lượng traffic Internet toàn cầu do hệ thống hạ tầng Cloudflare điều phối. Cứ 5 yêu cầu truy cập mạng thì có 1 yêu cầu đi qua hệ thống này.</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">$72 Tỷ</div>
+                    <div class="stat-label">Vốn Hóa Thị Trường</div>
+                    <div class="stat-desc">Thống trị kỹ thuật mang lại tài chính ấn tượng đầu năm 2026 với doanh thu quý 1 đạt ~640 triệu USD, duy trì biên lợi nhuận gộp kỷ lục 73.3%.</div>
+                </div>
+            </div>
+
+            <div class="alert-box">
+                <strong>Sức ảnh hưởng hệ thống & Xu hướng AI:</strong>
+                Mặc dù nắm giữ thị phần áp đảo ở mảng hạ tầng web truyền thống, Cloudflare đang thực hiện cuộc dịch chuyển chiến lược mạnh mẽ sang mô hình ưu tiên trí tuệ nhân tạo, dồn toàn lực đầu tư vào các giải pháp công nghệ mới như <em>Workers AI</em> và <em>AI Gateway</em>. Tầm ảnh hưởng lớn đến mức bất kỳ một sự cố nhỏ nào của hệ thống cũng có thể làm tê liệt hàng loạt dịch vụ lớn toàn cầu từ ChatGPT, X, Spotify cho đến Discord và Shopify.
+            </div>
+
+        </div>
+    </div>
+
 </body>
 </html>
